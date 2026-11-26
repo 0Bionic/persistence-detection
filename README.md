@@ -92,6 +92,21 @@ runners orchestrate all three detectors at once against one plant event.
 
 ## Running the experiments
 
+The easiest way, on the VM (needs a real terminal — see the note below):
+
+```bash
+bash run_experiments.sh --quick   # fast sanity pass first
+bash run_experiments.sh           # the real run, full proposal scale
+```
+
+This caches a sudo credential up front (`auditd` and `ld_preload` both need
+root), keeps it alive for the whole run, runs Experiments A, B, C, D in
+sequence, and then the analysis step below. **Must be run on a real
+machine/VM with a real terminal** — a Claude Code sandbox session can't
+authenticate `sudo` interactively, by design, so this won't work inside one.
+
+Or run each experiment on its own:
+
 ```bash
 # Experiment A — coverage + detection latency
 python3 experiments/run_experiment_a.py --iterations 10 --diff-intervals 5 30 60
@@ -99,15 +114,17 @@ python3 experiments/run_experiment_a.py --iterations 10 --diff-intervals 5 30 60
 # Experiment B — false positives on normal admin activity
 python3 experiments/run_experiment_b.py --iterations 3 --diff-interval 30
 
+# Experiment C — resource cost (CPU/memory/disk I/O per detector)
+python3 experiments/run_experiment_c.py --technique shell_rc --duration 60
+
 # Experiment D — evasion (timing + alternate persistence paths)
 python3 experiments/run_experiment_d.py --iterations 10 --diff-intervals 5 30 60
 ```
 
-Each writes `plants.jsonl` / `alerts.jsonl` (append-only, shared across runs)
-into `results/`, plus `classifications.jsonl` (Experiment B) and
-`evasion_results.jsonl` (Experiment D). Experiment C has no separate runner —
-`analysis/measure_resources.py` samples `/proc` for the detector PIDs these
-runners start; see [`experiments/README.md`](experiments/README.md).
+A/B/D write `plants.jsonl` / `alerts.jsonl` (append-only, shared across runs)
+into `results/`, plus `classifications.jsonl` (B) and `evasion_results.jsonl`
+(D); C writes `resources.csv`. See [`experiments/README.md`](experiments/README.md)
+for exactly what each one does and why.
 
 ## Analysis
 

@@ -106,22 +106,41 @@ misrepresent both.
 
 ## Experiment C — resource cost
 
-No separate runner. Measure it by hand around any of the runners above:
-start the detector(s) you want to measure the same way `runner_common.py`
-does (see `detectors/ALERT_CONTRACT.md` and the commands in the root
-README's "Running the detectors" section), grab their PIDs, then:
-
 ```bash
-python3 analysis/measure_resources.py \
-  --experiment-id C --run-id <id> --trial 0 \
-  --detector baseline_diff --phase idle \
-  --pid <detector_pid> --interval 1 --duration 60 \
-  --output results/resources.csv
+python3 experiments/run_experiment_c.py \
+  --technique shell_rc --interval 1 --duration 60
 ```
 
-Repeat with `--phase active` while an implant is being planted/removed in a
-loop, and for each detector. See `analysis/RESOURCE_MEASUREMENTS.md` for the
-CSV contract and the `pidstat` cross-check.
+For each available detector, starts it (reusing the same `DetectorSession`
+as the other three runners) watching one representative technique
+(`shell_rc` by default — the proposal only asks for cost per detector, not
+per technique), finds its PID and any child process PIDs (e.g. `inotify`'s
+`inotifywait` subprocess, found by reading `/proc/<pid>/task/*/children`),
+and hands them to `analysis/measure_resources.py` for an **idle** sample
+(nothing happening) and an **active** one (the implant planted and cleaned
+up in a tight loop for the whole window). `measure_resources.py`'s
+`--output` overwrites rather than appends, so this script collects each
+(detector, phase) into its own temp file and concatenates them into
+`results/resources.csv`. See `analysis/RESOURCE_MEASUREMENTS.md` for the CSV
+contract and the `pidstat` cross-check (worth doing by hand alongside this
+for the report, per that doc).
+
+## Running everything at once
+
+```bash
+bash run_experiments.sh --quick   # fast sanity pass first — run this on a
+                                   # fresh checkout before committing to a
+                                   # multi-hour run
+bash run_experiments.sh           # the real run, full proposal scale
+```
+
+The root-level `run_experiments.sh` sequences all four experiment runners
+and the analysis step, caches a sudo credential up front (needed by
+`auditd`/`ld_preload`) and keeps it alive for the whole run, and keeps going
+past any one experiment's failure so a problem in, say, Experiment D doesn't
+cost you A's and B's data too. Must be run on a real machine with a real
+terminal (the VM from `docs/VM_SETUP.md`) — sudo can't authenticate
+interactively inside a Claude Code sandbox session, by design.
 
 ## Shared code
 
