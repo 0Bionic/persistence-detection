@@ -44,7 +44,7 @@ done
 if [[ $QUICK -eq 1 ]]; then
   ITERATIONS=1
   A_D_ARGS=(--techniques cron shell_rc ld_preload --diff-intervals 5 30)
-  B_ARGS=(--techniques cron shell_rc ld_preload --diff-interval 10)
+  B_ARGS=(--techniques cron shell_rc ld_preload --diff-interval 5)
 else
   A_D_ARGS=(--diff-intervals 5 30 60)
   B_ARGS=(--diff-interval 30)

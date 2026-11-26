@@ -15,6 +15,7 @@ trial" rule, so no baseline or watch state leaks between trials.
 
 from __future__ import annotations
 
+import getpass
 import json
 import signal
 import subprocess
@@ -29,6 +30,17 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 IMPLANTS_DIR = REPO_ROOT / "implants"
 DETECTORS_DIR = REPO_ROOT / "detectors"
 RESULTS_DIR = REPO_ROOT / "results"
+
+# Captured here, in this unprivileged process, before any sudo invocation.
+# `sudo` commonly resets $USER (and sometimes $HOME) for the command it
+# execs, which would otherwise silently break cron's path resolution (its
+# configured path is the only one built from {user} rather than {home} —
+# see detectors/config.json). Every detector invocation gets these passed
+# explicitly via --home/--user instead of letting it fall back to
+# os.environ, so path resolution can't depend on what sudo does to the
+# subprocess's environment.
+REAL_HOME = str(Path.home())
+REAL_USER = getpass.getuser()
 
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -109,34 +121,54 @@ def implant_evade(technique: str) -> bool:
 
 def technique_paths(technique: str) -> tuple[str, ...]:
     config = load_config(str(CONFIG_PATH))
-    return tuple(str(p) for p in resolve_paths(config, technique))
+    return tuple(str(p) for p in resolve_paths(config, technique, home=REAL_HOME, user=REAL_USER))
 
 
 # --- sudo / detector availability -------------------------------------------
 
-_auditd_viable_cache: bool | None = None
+# cron's configured path (/var/spool/cron/crontabs/{user}) is root:crontab-
+# owned and not readable or even listable by a plain user on stock Ubuntu —
+# unlike every other technique's path, which the owning user can always
+# read. So baseline_diff/inotify, normally unprivileged, need sudo too, but
+# only for this one technique; everything else stays unprivileged to avoid
+# needlessly widening what runs as root (and because Experiment C's PID
+# introspection and /proc sampling assume an unprivileged detector process).
+SUDO_ONLY_TECHNIQUE = "cron"
+
+_sudo_viable_cache: bool | None = None
 
 
-def auditd_viable() -> bool:
-    """Whether passwordless-cached sudo is available for the auditd detector.
+def sudo_viable() -> bool:
+    """Whether passwordless-cached sudo is available.
 
     Checked once per process and cached, so a missing cached credential
     produces one warning instead of one per trial. Run ``sudo -v`` before a
     long experiment so this stays true for the whole run.
     """
 
-    global _auditd_viable_cache
-    if _auditd_viable_cache is None:
-        result = subprocess.run(
-            ["sudo", "-n", "true"], capture_output=True
-        )
-        _auditd_viable_cache = result.returncode == 0
-        if not _auditd_viable_cache:
-            log("auditd unavailable: no cached sudo credential (run `sudo -v` first)")
-    return _auditd_viable_cache
+    global _sudo_viable_cache
+    if _sudo_viable_cache is None:
+        result = subprocess.run(["sudo", "-n", "true"], capture_output=True)
+        _sudo_viable_cache = result.returncode == 0
+        if not _sudo_viable_cache:
+            log("sudo unavailable: no cached credential (run `sudo -v` first) — "
+                "auditd and cron's baseline_diff/inotify coverage will be skipped")
+    return _sudo_viable_cache
 
 
-def detector_available(name: str) -> bool:
+def detector_needs_sudo(name: str, technique: str) -> bool:
+    return name == "auditd" or technique == SUDO_ONLY_TECHNIQUE
+
+
+def detector_available(name: str, technique: str = SUDO_ONLY_TECHNIQUE) -> bool:
+    """Whether ``name`` can run right now, watching ``technique``.
+
+    Defaults ``technique`` to the one that needs sudo, so a caller that
+    doesn't have a specific technique in mind (e.g. a plain availability
+    check) gets the more conservative answer rather than silently assuming
+    the unprivileged case.
+    """
+
     script = {
         "baseline_diff": "baseline_diff.py",
         "inotify": "inotify_watch.py",
@@ -144,13 +176,13 @@ def detector_available(name: str) -> bool:
     }.get(name)
     if script is None or not (DETECTORS_DIR / script).exists():
         return False
-    if name == "auditd":
-        return auditd_viable()
+    if detector_needs_sudo(name, technique):
+        return sudo_viable()
     return True
 
 
-def available_detectors(requested: Sequence[str] = ALL_DETECTORS) -> list[str]:
-    available = [name for name in requested if detector_available(name)]
+def available_detectors(requested: Sequence[str] = ALL_DETECTORS, *, technique: str = SUDO_ONLY_TECHNIQUE) -> list[str]:
+    available = [name for name in requested if detector_available(name, technique)]
     for name in requested:
         if name not in available:
             log(f"skipping detector '{name}': not available in this environment")
@@ -211,6 +243,12 @@ class DetectorHandle:
         self.diag_file.close()
 
 
+def _sudo_prefix() -> list[str]:
+    # -n: fail fast if the cached credential is gone, instead of hanging on
+    # a password prompt nobody is there to answer in an unattended run.
+    return ["sudo", "-n"]
+
+
 def _detector_command(
     name: str,
     *,
@@ -221,24 +259,31 @@ def _detector_command(
     output_path: Path,
     interval: int | None,
 ) -> list[str]:
+    prefix = _sudo_prefix() if detector_needs_sudo(name, technique) else []
+    # --home/--user always explicit (never left to default to os.environ /
+    # Path.home() inside the subprocess) — see the REAL_HOME/REAL_USER
+    # comment up top for why: sudo commonly rewrites $USER for the command
+    # it execs, which would otherwise silently break cron's path resolution.
+    identity = ["--home", REAL_HOME, "--user", REAL_USER]
+
     if name == "baseline_diff":
         cmd = [
-            sys.executable, str(DETECTORS_DIR / "baseline_diff.py"),
+            *prefix, sys.executable, str(DETECTORS_DIR / "baseline_diff.py"),
             "--experiment-id", experiment_id, "--run-id", run_id,
-            "--technique", technique, "--output", str(output_path),
+            "--technique", technique, *identity, "--output", str(output_path),
             "--interval", str(interval if interval is not None else 30),
         ]
     elif name == "inotify":
         cmd = [
-            sys.executable, str(DETECTORS_DIR / "inotify_watch.py"),
+            *prefix, sys.executable, str(DETECTORS_DIR / "inotify_watch.py"),
             "--experiment-id", experiment_id, "--run-id", run_id,
-            "--technique", technique, "--output", str(output_path),
+            "--technique", technique, *identity, "--output", str(output_path),
         ]
     elif name == "auditd":
         cmd = [
-            "sudo", "-n", sys.executable, str(DETECTORS_DIR / "auditd_watch.py"), "monitor",
+            *prefix, sys.executable, str(DETECTORS_DIR / "auditd_watch.py"), "monitor",
             "--experiment-id", experiment_id, "--run-id", run_id,
-            "--technique", technique, "--output", str(output_path),
+            "--technique", technique, *identity, "--output", str(output_path),
         ]
     else:
         raise ValueError(f"unknown detector: {name}")
@@ -249,8 +294,8 @@ def _detector_command(
 
 def auditd_install(technique: str) -> bool:
     result = subprocess.run(
-        ["sudo", "-n", sys.executable, str(DETECTORS_DIR / "auditd_watch.py"),
-         "install", "--technique", technique],
+        [*_sudo_prefix(), sys.executable, str(DETECTORS_DIR / "auditd_watch.py"),
+         "install", "--technique", technique, "--home", REAL_HOME, "--user", REAL_USER],
         capture_output=True, text=True,
     )
     if result.returncode != 0:
@@ -261,8 +306,8 @@ def auditd_install(technique: str) -> bool:
 
 def auditd_remove(technique: str) -> None:
     subprocess.run(
-        ["sudo", "-n", sys.executable, str(DETECTORS_DIR / "auditd_watch.py"),
-         "remove", "--technique", technique],
+        [*_sudo_prefix(), sys.executable, str(DETECTORS_DIR / "auditd_watch.py"),
+         "remove", "--technique", technique, "--home", REAL_HOME, "--user", REAL_USER],
         capture_output=True, text=True,
     )
 
@@ -290,7 +335,7 @@ def start_detector(
     )
     return DetectorHandle(
         name=name, proc=proc, output_path=output_path, diag_path=diag_path,
-        diag_file=diag_file, sudo=(name == "auditd"),
+        diag_file=diag_file, sudo=detector_needs_sudo(name, technique),
     )
 
 
@@ -322,7 +367,7 @@ class DetectorSession:
         self.trial = trial
         self.run_dir = run_dir
         self.master_alerts_path = master_alerts_path
-        self.requested = [d for d in detectors if detector_available(d)]
+        self.requested = [d for d in detectors if detector_available(d, technique)]
         self.interval = interval
         self.handles: list[DetectorHandle] = []
         self.started: list[str] = []

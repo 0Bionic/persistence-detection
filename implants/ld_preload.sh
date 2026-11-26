@@ -42,6 +42,7 @@ do_plant() {
 
 do_cleanup() {
   pd_restore "$PRELOAD_FILE" "sudo"
+  pd_remove_block "$HOME/.bashrc"   # undo do_evade's per-user LD_PRELOAD, if planted
   pd_info "cleaned up"
 }
 

@@ -38,6 +38,7 @@ from runner_common import (  # noqa: E402
     REPO_ROOT,
     RESULTS_DIR,
     TECHNIQUE_SLUGS,
+    detector_needs_sudo,
     implant_cleanup,
     implant_plant,
     log,
@@ -66,10 +67,15 @@ def child_pids(pid: int) -> list[int]:
 
 def sample(
     *, experiment_id: str, run_id: str, trial: int, detector: str, phase: str,
-    pids: list[int], interval: float, duration: float, output: Path,
+    pids: list[int], interval: float, duration: float, output: Path, sudo: bool,
 ) -> bool:
+    # When the detector being measured runs as root (auditd always; any
+    # detector when watching cron), /proc/<pid>/io is only readable by its
+    # owner or root — sample as root too, or every read/write-byte-delta
+    # field comes back blank with "permission denied reading .../io".
+    prefix = ["sudo", "-n"] if sudo else []
     cmd = [
-        sys.executable, str(MEASURE_RESOURCES),
+        *prefix, sys.executable, str(MEASURE_RESOURCES),
         "--experiment-id", experiment_id, "--run-id", run_id, "--trial", str(trial),
         "--detector", detector, "--phase", phase,
         "--interval", str(interval), "--duration", str(duration),
@@ -120,6 +126,7 @@ def run_detector_phase(
         ok = sample(
             experiment_id="C", run_id=run_id, trial=0, detector=detector, phase=phase,
             pids=pids, interval=interval, duration=duration, output=out,
+            sudo=detector_needs_sudo(detector, technique),
         )
         if thread is not None:
             stop_event.set()

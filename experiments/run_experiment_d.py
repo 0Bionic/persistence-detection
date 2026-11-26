@@ -68,7 +68,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--techniques", nargs="+", default=list(TECHNIQUE_SLUGS), choices=TECHNIQUE_SLUGS)
     parser.add_argument("--detectors", nargs="+", default=list(ALL_DETECTORS), choices=ALL_DETECTORS)
     parser.add_argument("--iterations", type=int, default=10)
-    parser.add_argument("--diff-intervals", nargs="+", type=int, default=list(DIFF_INTERVALS))
+    parser.add_argument("--diff-intervals", nargs="+", type=int, default=list(DIFF_INTERVALS), choices=DIFF_INTERVALS)
     parser.add_argument("--results-dir", type=Path, default=RESULTS_DIR)
     return parser.parse_args(argv)
 

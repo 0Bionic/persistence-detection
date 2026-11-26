@@ -37,6 +37,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from runner_common import (  # noqa: E402
     ALL_DETECTORS,
+    DIFF_INTERVALS,
     DetectorSession,
     RESULTS_DIR,
     TECHNIQUE_SLUGS,
@@ -54,7 +55,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--techniques", nargs="+", default=list(TECHNIQUE_SLUGS), choices=TECHNIQUE_SLUGS)
     parser.add_argument("--detectors", nargs="+", default=list(ALL_DETECTORS), choices=ALL_DETECTORS)
     parser.add_argument("--iterations", type=int, default=3)
-    parser.add_argument("--diff-interval", type=int, default=30)
+    parser.add_argument("--diff-interval", type=int, default=30, choices=list(DIFF_INTERVALS))
     parser.add_argument("--skip-pkg-install", action="store_true")
     parser.add_argument("--results-dir", type=Path, default=RESULTS_DIR)
     return parser.parse_args(argv)
