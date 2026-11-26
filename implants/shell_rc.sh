@@ -3,7 +3,7 @@
 # Persistence: a tagged block appended to ~/.bashrc that fires every time a
 # new interactive shell starts.
 # MITRE ATT&CK: T1546.004 (Event Triggered Execution: Unix Shell Config Mod).
-PD_TECH="bashrc"
+PD_TECH="shell_rc"
 source "$(dirname "$(readlink -f "$0")")/lib.sh"
 
 RC_FILE="$HOME/.bashrc"

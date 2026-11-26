@@ -22,7 +22,7 @@ export PD_MARKER_FILE
 PD_TAG="pd-persist"
 
 # Canonical list of techniques (script basenames in this folder).
-PD_TECHNIQUES="cron systemd_user bashrc ssh_key xdg_autostart ld_preload"
+PD_TECHNIQUES="cron systemd_user shell_rc ssh_authorized_keys xdg_autostart ld_preload"
 
 mkdir -p "$PD_STATE_DIR" "$PD_BACKUP_DIR"
 

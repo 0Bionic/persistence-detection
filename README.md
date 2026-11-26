@@ -82,7 +82,10 @@ sudo python3 detectors/auditd_watch.py monitor --experiment-id A --run-id R1 \
 sudo python3 detectors/auditd_watch.py remove --technique shell_rc
 ```
 
-They run until killed (`SIGINT`/`SIGTERM`), appending JSONL `alert` records.
+They run until killed — with `SIGINT` specifically; none of them trap
+`SIGTERM`, so stop them with Ctrl-C or `kill -INT`, not plain `kill`, or
+their cleanup/flush-on-exit code won't run — appending JSONL `alert`
+records as they go.
 See [`detectors/ALERT_CONTRACT.md`](detectors/ALERT_CONTRACT.md) for the full
 event schema and [`experiments/README.md`](experiments/README.md) for how the
 runners orchestrate all three detectors at once against one plant event.

@@ -3,7 +3,7 @@
 # Persistence: an extra keypair whose public half is appended to
 # ~/.ssh/authorized_keys, letting the attacker log back in with the key.
 # MITRE ATT&CK: T1098.004 (Account Manipulation: SSH Authorized Keys).
-PD_TECH="ssh_key"
+PD_TECH="ssh_authorized_keys"
 source "$(dirname "$(readlink -f "$0")")/lib.sh"
 
 AUTH_KEYS="$HOME/.ssh/authorized_keys"
