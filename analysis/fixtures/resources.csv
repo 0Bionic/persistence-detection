@@ -1,0 +1,9 @@
+experiment_id,run_id,trial,detector,phase,pid,sample_source,sample_time_epoch_ns,sample_time_utc,sample_status,cpu_percent,cpu_time_jiffies,resident_memory_kb,read_bytes_delta,write_bytes_delta,error
+C,synthetic-resource-baseline-001,0,baseline_diff,idle,111,proc,1700000100000000000,2023-11-14T22:15:00.000000000Z,baseline,1.0,,10000,,,baseline sample; interval deltas unavailable
+C,synthetic-resource-baseline-001,0,baseline_diff,idle,111,proc,1700000101000000000,2023-11-14T22:15:01.000000000Z,ok,3.0,,12000,100,50,
+C,synthetic-resource-baseline-001,0,baseline_diff,idle,111,proc,1700000102000000000,2023-11-14T22:15:02.000000000Z,ok,2.0,,11000,300,100,
+C,synthetic-resource-baseline-001,0,baseline_diff,idle,111,proc,1700000103000000000,2023-11-14T22:15:03.000000000Z,inaccessible,2.0,,11000,,,read_bytes_delta unavailable; write_bytes_delta unavailable
+C,synthetic-resource-inotify-001,0,inotify,active,222,proc,1700000110000000000,2023-11-14T22:15:10.000000000Z,baseline,2.0,,15000,,,baseline sample; interval deltas unavailable
+C,synthetic-resource-inotify-001,0,inotify,active,222,proc,1700000111000000000,2023-11-14T22:15:11.000000000Z,ok,4.0,,16000,200,100,
+C,synthetic-resource-auditd-001,0,auditd,idle,333,proc,1700000120000000000,2023-11-14T22:15:20.000000000Z,ok,1.5,,20000,50,30,
+C,synthetic-resource-auditd-001,0,auditd,idle,333,proc,1700000121000000000,2023-11-14T22:15:21.000000000Z,ok,2.5,,21000,70,40,

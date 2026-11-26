@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "techniques": {
+    "cron": {
+      "path_templates": ["/var/spool/cron/crontabs/{user}"],
+      "path_kind": "file",
+      "source": "proposal: cron job / per-user crontab entry"
+    },
+    "systemd_user": {
+      "path_templates": ["{home}/.config/systemd/user"],
+      "path_kind": "directory",
+      "source": "proposal: ~/.config/systemd/user/*.service"
+    },
+    "shell_rc": {
+      "path_templates": ["{home}/.bashrc"],
+      "path_kind": "file",
+      "source": "proposal: line added to ~/.bashrc"
+    },
+    "ssh_authorized_keys": {
+      "path_templates": ["{home}/.ssh/authorized_keys"],
+      "path_kind": "file",
+      "source": "proposal: SSH authorized_keys"
+    },
+    "xdg_autostart": {
+      "path_templates": ["{home}/.config/autostart"],
+      "path_kind": "directory",
+      "source": "proposal: ~/.config/autostart/*.desktop"
+    },
+    "ld_preload": {
+      "path_templates": ["/etc/ld.so.preload"],
+      "path_kind": "file",
+      "source": "proposal: /etc/ld.so.preload"
+    }
+  }
+}

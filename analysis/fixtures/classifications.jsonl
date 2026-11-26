@@ -1,0 +1,4 @@
+{"record_type":"alert_classification","alert_id":"synthetic-alert-baseline-shell-001","classification":"true_positive","reason":"matched synthetic plant","fixture":"synthetic"}
+{"record_type":"alert_classification","alert_id":"synthetic-alert-inotify-systemd-001","classification":"true_positive","reason":"matched synthetic plant","fixture":"synthetic"}
+{"record_type":"alert_classification","alert_id":"synthetic-alert-audit-shell-001","classification":"true_positive","reason":"matched synthetic plant","fixture":"synthetic"}
+{"record_type":"alert_classification","alert_id":"synthetic-alert-fp-shell-001","classification":"false_positive","reason":"synthetic normal-activity window","fixture":"synthetic"}

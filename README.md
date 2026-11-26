@@ -14,18 +14,18 @@ evasion.
 | Folder | Contents |
 |---|---|
 | `implants/` | The six persistence techniques (cron, systemd user unit, shell rc, SSH `authorized_keys`, XDG autostart, `LD_PRELOAD`), plus each one's evasion variant. |
-| `detectors/` | The three defenders: baseline diffing, inotify, auditd. |
-| `experiments/` | Runners for Experiments A–D (coverage/latency, false positives, resource cost, evasion). |
-| `analysis/` | Scripts that turn `results/*.csv` into the tables and plots for the report. |
-| `results/` | CSV output from experiment runs, plus `system_info_<hostname>.txt` from `setup.sh`. |
+| `detectors/` | The three defenders: `baseline_diff.py`, `inotify_watch.py`, `auditd_watch.py`, and the shared JSONL event contract (`alert_schema.py`, `ALERT_CONTRACT.md`, `config.json`) they're built on. |
+| `experiments/` | Runners for Experiments A, B, D (coverage/latency, false positives, evasion); Experiment C (resource cost) is driven by `analysis/measure_resources.py` against the PIDs these runners start. |
+| `analysis/` | Turns the runner's `plants.jsonl`/`alerts.jsonl` (plus resource CSVs and classification/evasion sidecars) into the report's tables and plots. |
+| `results/` | JSONL/CSV output from experiment runs, plus `system_info_<hostname>.txt` from `setup.sh`. |
 | `docs/` | `VM_SETUP.md` — how to build the test VM. |
 | `proposal/` | The submitted project proposal. |
 
 ## Setup
 
 Target: Ubuntu 24.04 (see [`docs/VM_SETUP.md`](docs/VM_SETUP.md) for full VM
-specs — use a VM, not your main machine, since the `LD_PRELOAD` implant and
-the evasion variants touch root-owned system files).
+specs — use a VM, not your main machine, since the `LD_PRELOAD` implant, the
+evasion variants, and the auditd detector touch root-owned system state).
 
 ```bash
 git clone <this repo>
@@ -55,8 +55,9 @@ bash implants/<technique>.sh evade     # install the evasion variant, where one 
 bash implants/<technique>.sh cleanup   # remove it, restore any files it changed
 ```
 
-`<technique>` is one of: `cron`, `systemd_user`, `bashrc`, `ssh_key`,
-`xdg_autostart`, `ld_preload`. Every marker line — proof an implant actually
+`<technique>` is one of: `cron`, `systemd_user`, `shell_rc`, `ssh_authorized_keys`,
+`xdg_autostart`, `ld_preload` — the same technique slugs `detectors/config.json`
+and the experiment runners use. Every marker line — proof an implant actually
 ran — lands in `~/.local/share/pd-markers/markers.log`.
 
 ```bash
@@ -67,32 +68,61 @@ bash implants/cron.sh cleanup
 
 ## Running the detectors
 
-Each detector in `detectors/` takes `start` / `stop`, watching the paths
-listed in a file and appending alerts to a log (see
-[`experiments/README.md`](experiments/README.md) for the exact interface —
-this is what the experiment runners drive automatically).
+Each detector in `detectors/` is a standalone Python script, invoked directly
+(not wrapped in a daemon) and driven by the experiment runners:
+
+```bash
+python3 detectors/baseline_diff.py --experiment-id A --run-id R1 --trial 0 \
+  --technique shell_rc --output results/alerts.jsonl --interval 30
+python3 detectors/inotify_watch.py --experiment-id A --run-id R1 --trial 0 \
+  --technique shell_rc --output results/alerts.jsonl
+sudo python3 detectors/auditd_watch.py install --technique shell_rc
+sudo python3 detectors/auditd_watch.py monitor --experiment-id A --run-id R1 \
+  --trial 0 --technique shell_rc --output results/alerts.jsonl
+sudo python3 detectors/auditd_watch.py remove --technique shell_rc
+```
+
+They run until killed (`SIGINT`/`SIGTERM`), appending JSONL `alert` records.
+See [`detectors/ALERT_CONTRACT.md`](detectors/ALERT_CONTRACT.md) for the full
+event schema and [`experiments/README.md`](experiments/README.md) for how the
+runners orchestrate all three detectors at once against one plant event.
 
 ## Running the experiments
 
 ```bash
 # Experiment A — coverage + detection latency
-experiments/exp_a_coverage_latency.sh --iterations 10 --diff-intervals "5 30 60"
+python3 experiments/run_experiment_a.py --iterations 10 --diff-intervals 5 30 60
 
 # Experiment B — false positives on normal admin activity
-experiments/exp_b_false_positives.sh --iterations 10 --diff-interval 30
+python3 experiments/run_experiment_b.py --iterations 3 --diff-interval 30
 
 # Experiment D — evasion (timing + alternate persistence paths)
-experiments/exp_d_evasion.sh --iterations 10 --diff-intervals "5 30 60"
+python3 experiments/run_experiment_d.py --iterations 10 --diff-intervals 5 30 60
 ```
 
-All three write a timestamped CSV to `results/`. Experiment C (resource
-cost) has no separate runner — it's Student 2's resource-measurement work
-layered on the same detector sessions these runners already start. See
-[`experiments/README.md`](experiments/README.md) for exact column schemas
-and what each evasion type means.
+Each writes `plants.jsonl` / `alerts.jsonl` (append-only, shared across runs)
+into `results/`, plus `classifications.jsonl` (Experiment B) and
+`evasion_results.jsonl` (Experiment D). Experiment C has no separate runner —
+`analysis/measure_resources.py` samples `/proc` for the detector PIDs these
+runners start; see [`experiments/README.md`](experiments/README.md).
 
-`analysis/` then turns those CSVs into the report's tables and plots (in
-progress — see that folder once Student 2's analysis scripts land).
+## Analysis
+
+```bash
+python3 -B analysis/make_tables.py \
+  --plants results/plants.jsonl --alerts results/alerts.jsonl \
+  --resources results/resources.csv \
+  --classifications results/classifications.jsonl \
+  --evasion results/evasion_results.jsonl \
+  --output-dir results/tables
+
+python3 -B analysis/make_plots.py \
+  --tables-dir results/tables --output-dir results/plots
+```
+
+See `analysis/RESOURCE_MEASUREMENTS.md` for the resource-CSV contract, and
+`analysis/check_analysis.py` / `analysis/check_measure_resources.py` for the
+project's synthetic, side-effect-free self-checks.
 
 ## Work split
 
