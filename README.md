@@ -80,12 +80,16 @@ experiments/exp_a_coverage_latency.sh --iterations 10 --diff-intervals "5 30 60"
 
 # Experiment B — false positives on normal admin activity
 experiments/exp_b_false_positives.sh --iterations 10 --diff-interval 30
+
+# Experiment D — evasion (timing + alternate persistence paths)
+experiments/exp_d_evasion.sh --iterations 10 --diff-intervals "5 30 60"
 ```
 
-Both write a timestamped CSV to `results/`. Experiment C (resource cost) and
-Experiment D (evasion) are documented in
-[`experiments/README.md`](experiments/README.md) — D reuses each implant's
-`evade` verb in place of `plant`.
+All three write a timestamped CSV to `results/`. Experiment C (resource
+cost) has no separate runner — it's Student 2's resource-measurement work
+layered on the same detector sessions these runners already start. See
+[`experiments/README.md`](experiments/README.md) for exact column schemas
+and what each evasion type means.
 
 `analysis/` then turns those CSVs into the report's tables and plots (in
 progress — see that folder once Student 2's analysis scripts land).

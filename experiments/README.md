@@ -48,18 +48,39 @@ experiments/exp_b_false_positives.sh \
   --detectors "diff inotify auditd" \
   --iterations 10 \
   --diff-interval 30
+
+# Experiment D: evasion (timing + alternate persistence paths)
+experiments/exp_d_evasion.sh \
+  --detectors "diff inotify auditd" \
+  --iterations 10 \
+  --diff-intervals "5 30 60"
 ```
 
-Both write a timestamped CSV to `results/`. `--help` on either script prints
-the full option list.
+All three write a timestamped CSV to `results/`. `--help` on any script
+prints its full option list.
 
-Experiments C (resource cost) and D (evasion) are not separate runner
-scripts: C is Student 2's resource-measurement work layered on top of the
-sessions these runners start (same `start`/`stop` detector calls, measured
-with `pidstat`/`/proc` in between); D reuses these same implants' `evade`
-verb (`implants/<tech>.sh evade`) in place of `plant` — every implant that
-has a meaningful evasion variant (all but `cron` and `systemd_user`, whose
-proposal-listed paths have no alternate location to hide in) implements one.
+`exp_d_evasion.sh` covers both evasion examples from the proposal:
+- **timing** — plant, hold briefly, remove again before the detector's next
+  check, for every technique (this is the "remove between two diff scans"
+  case; it's approximate for `diff` since the runner doesn't know the exact
+  phase of its scan cycle, and is a short fixed hold for the event-driven
+  detectors).
+- **path** — use the implant's `evade` verb, which writes to a path outside
+  the canonical one in `paths` (e.g. `~/.profile` instead of `~/.bashrc`,
+  the system-wide autostart dir instead of the per-user one). Implemented
+  for `bashrc`, `ssh_key`, `xdg_autostart`, `ld_preload`; `cron` and
+  `systemd_user` have no alternate location to hide in and are recorded as
+  `no_evasion_variant`.
+
+"Still detected" counts any new alert in the window, not just one naming the
+exact path touched — a detector that happens to also watch the path an
+evasion lands on (e.g. `ld_preload`'s evasion rewrites `~/.bashrc`) should
+get credit.
+
+Experiment C (resource cost) is not a separate runner script: it's Student
+2's resource-measurement work layered on top of the sessions these runners
+already start (same `start`/`stop` detector calls, measured with
+`pidstat`/`/proc` in between).
 
 ## Notes
 
