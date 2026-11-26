@@ -1,0 +1,15 @@
+[exp] WARN: detector 'inotify' exited before becoming ready (rc=2); see results/.exp_a_run/A-cron-i5-t0-abcc7d05-36fb-48c7-830f-0d2186629627/inotify_cron_diag.log
+[exp] [A interval=5] cron trial 0: planted, waiting up to 20s for ['baseline_diff', 'auditd']
+[exp] [A interval=5] cron trial 0: 0 alert(s) for plant_event_id=plant-eb8414df-da1a-47f9-8c3e-8827023a7529
+[exp] [A interval=5] shell_rc trial 0: planted, waiting up to 20s for ['baseline_diff', 'inotify', 'auditd']
+[exp] [A interval=5] shell_rc trial 0: 3 alert(s) for plant_event_id=plant-189205d1-8570-4545-a87b-a417c97b94c2
+[exp] [A interval=5] ld_preload trial 0: planted, waiting up to 20s for ['baseline_diff', 'inotify', 'auditd']
+[exp] [A interval=5] ld_preload trial 0: 3 alert(s) for plant_event_id=plant-90ddd901-2120-49f9-99cb-19aa93452e1f
+[exp] WARN: detector 'inotify' exited before becoming ready (rc=2); see results/.exp_a_run/A-cron-i30-t0-7c604bc5-3ee0-4f90-9610-c06f6e2361f5/inotify_cron_diag.log
+[exp] [A interval=30] cron trial 0: planted, waiting up to 45s for ['baseline_diff', 'auditd']
+[exp] [A interval=30] cron trial 0: 0 alert(s) for plant_event_id=plant-c081f999-3d66-4ebc-9809-59e8694d211b
+[exp] [A interval=30] shell_rc trial 0: planted, waiting up to 45s for ['baseline_diff', 'inotify', 'auditd']
+[exp] [A interval=30] shell_rc trial 0: 3 alert(s) for plant_event_id=plant-8bc6e45e-e6a9-43dc-96b6-f7d1453562a3
+[exp] [A interval=30] ld_preload trial 0: planted, waiting up to 45s for ['baseline_diff', 'inotify', 'auditd']
+[exp] [A interval=30] ld_preload trial 0: 3 alert(s) for plant_event_id=plant-347995db-83f9-49f6-979b-2fb199ba2b5f
+[exp] done. plants: results/plants.jsonl  alerts: results/alerts.jsonl

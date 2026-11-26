@@ -1,0 +1,12 @@
+[exp] WARN: detector 'baseline_diff' exited before becoming ready (rc=2); see results/.exp_b_run/B-iter0-74fed0b9-d7b7-4510-8d40-5a0db278d899/cron/baseline_diff_cron_diag.log
+[exp] WARN: detector 'inotify' exited before becoming ready (rc=2); see results/.exp_b_run/B-iter0-74fed0b9-d7b7-4510-8d40-5a0db278d899/cron/inotify_cron_diag.log
+[exp] WARN: detector 'baseline_diff' exited before becoming ready (rc=2); see results/.exp_b_run/B-iter0-74fed0b9-d7b7-4510-8d40-5a0db278d899/shell_rc/baseline_diff_shell_rc_diag.log
+[exp] WARN: detector 'baseline_diff' exited before becoming ready (rc=2); see results/.exp_b_run/B-iter0-74fed0b9-d7b7-4510-8d40-5a0db278d899/ld_preload/baseline_diff_ld_preload_diag.log
+[exp] [B] iteration 0: watching ['cron', 'shell_rc', 'ld_preload'] (5 detector process(es)), settle=8s
+[exp] [B] iteration 0: install_package window closed
+[exp] [B] iteration 0: edit_bashrc window closed
+[exp] [B] iteration 0: add_real_cron window closed
+[exp] note: ssh login did not complete (no passwordless key set up) — window still counted
+[exp] [B] iteration 0: ssh_login window closed
+[exp] [B] iteration 0: 2 alert(s), all classified false_positive
+[exp] done. alerts: results/alerts.jsonl  classifications: results/classifications.jsonl

@@ -1,0 +1,11 @@
+[exp] WARN: detector 'inotify' exited before becoming ready (rc=2); see results/.exp_d_run/D-timing-cron-i5-t0-47aacd69-717f-4c90-90a1-defbf6338b1b/inotify_cron_diag.log
+[exp] [D timing i=5] cron trial 0: held 1s, still_detected=False (['baseline_diff', 'auditd'])
+[exp] [D timing i=5] shell_rc trial 0: held 1s, still_detected=True (['baseline_diff', 'inotify', 'auditd'])
+[exp] [D timing i=5] ld_preload trial 0: held 1s, still_detected=True (['baseline_diff', 'inotify', 'auditd'])
+[exp] WARN: detector 'inotify' exited before becoming ready (rc=2); see results/.exp_d_run/D-timing-cron-i30-t0-c12c6855-9321-43cb-bbd2-535c62c1d13b/inotify_cron_diag.log
+[exp] [D timing i=30] cron trial 0: held 10s, still_detected=False (['baseline_diff', 'auditd'])
+[exp] [D timing i=30] shell_rc trial 0: held 10s, still_detected=True (['baseline_diff', 'inotify', 'auditd'])
+[exp] [D timing i=30] ld_preload trial 0: held 10s, still_detected=True (['baseline_diff', 'inotify', 'auditd'])
+[exp] [D path] shell_rc trial 0: still_detected=False (['baseline_diff', 'inotify', 'auditd'])
+[exp] [D path] ld_preload trial 0: still_detected=False (['baseline_diff', 'inotify', 'auditd'])
+[exp] done. evasion results: results/evasion_results.jsonl

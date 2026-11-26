@@ -1,0 +1,9 @@
+experiment_id,detector,technique,total_plants,detected_plants,detection_rate,data_status
+A,auditd,cron,2,0,0.0,ok
+A,auditd,ld_preload,2,2,1.0,ok
+A,auditd,shell_rc,2,0,0.0,ok
+A,baseline_diff,cron,2,0,0.0,ok
+A,baseline_diff,ld_preload,2,2,1.0,ok
+A,baseline_diff,shell_rc,2,2,1.0,ok
+A,inotify,ld_preload,2,2,1.0,ok
+A,inotify,shell_rc,2,2,1.0,ok

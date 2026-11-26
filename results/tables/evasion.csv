@@ -1,0 +1,15 @@
+experiment_id,detector,technique,evasion_label,total_trials,detected_trials,evasion_detection_rate,data_status
+D,auditd,cron,timing,2,0,0.0,ok
+D,auditd,ld_preload,path,1,0,0.0,ok
+D,auditd,ld_preload,timing,2,2,1.0,ok
+D,auditd,shell_rc,path,1,0,0.0,ok
+D,auditd,shell_rc,timing,2,2,1.0,ok
+D,baseline_diff,cron,timing,2,0,0.0,ok
+D,baseline_diff,ld_preload,path,1,0,0.0,ok
+D,baseline_diff,ld_preload,timing,2,2,1.0,ok
+D,baseline_diff,shell_rc,path,1,0,0.0,ok
+D,baseline_diff,shell_rc,timing,2,2,1.0,ok
+D,inotify,ld_preload,path,1,0,0.0,ok
+D,inotify,ld_preload,timing,2,2,1.0,ok
+D,inotify,shell_rc,path,1,0,0.0,ok
+D,inotify,shell_rc,timing,2,2,1.0,ok

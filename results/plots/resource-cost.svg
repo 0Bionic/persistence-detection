@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760">
+<style>text{font-family:Arial,sans-serif;fill:#202124} .axis{stroke:#6b7280;stroke-width:1} .grid{stroke:#d1d5db;stroke-width:1} .bar{fill:#2563eb} .note{fill:#6b7280;font-size:12px}</style>
+<text x="550.0" y="28" text-anchor="middle" font-size="18" font-weight="bold">Resource cost by detector and phase</text>
+<text x="285.0" y="80" text-anchor="middle" font-size="14" font-weight="bold">Mean CPU (%)</text>
+<line class="axis" x1="85" x2="85" y1="100" y2="275"/>
+<line class="axis" x1="85" x2="520" y1="275" y2="275"/>
+<rect class="bar" x="97.7" y="275.0" width="47.1" height="0.0"/>
+<text x="121.2" y="270.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="121.2" y="291.0" text-anchor="end" transform="rotate(-45 121.2 291.0)" font-size="10">auditd / active</text>
+<rect class="bar" x="170.2" y="275.0" width="47.1" height="0.0"/>
+<text x="193.8" y="270.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="193.8" y="291.0" text-anchor="end" transform="rotate(-45 193.8 291.0)" font-size="10">auditd / idle</text>
+<rect class="bar" x="242.7" y="275.0" width="47.1" height="0.0"/>
+<text x="266.2" y="270.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="266.2" y="291.0" text-anchor="end" transform="rotate(-45 266.2 291.0)" font-size="10">baseline_diff / active</text>
+<rect class="bar" x="315.2" y="275.0" width="47.1" height="0.0"/>
+<text x="338.8" y="270.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="338.8" y="291.0" text-anchor="end" transform="rotate(-45 338.8 291.0)" font-size="10">baseline_diff / idle</text>
+<rect class="bar" x="387.7" y="100.0" width="47.1" height="175.0"/>
+<text x="411.2" y="95.0" text-anchor="middle" font-size="10">0.17</text>
+<text x="411.2" y="291.0" text-anchor="end" transform="rotate(-45 411.2 291.0)" font-size="10">inotify / active</text>
+<rect class="bar" x="460.2" y="149.6" width="47.1" height="125.4"/>
+<text x="483.8" y="144.6" text-anchor="middle" font-size="10">0.13</text>
+<text x="483.8" y="291.0" text-anchor="end" transform="rotate(-45 483.8 291.0)" font-size="10">inotify / idle</text>
+<text x="815.0" y="80" text-anchor="middle" font-size="14" font-weight="bold">Mean resident memory (KiB)</text>
+<line class="axis" x1="615" x2="615" y1="100" y2="275"/>
+<line class="axis" x1="615" x2="1050" y1="275" y2="275"/>
+<rect class="bar" x="627.7" y="239.7" width="47.1" height="35.3"/>
+<text x="651.2" y="234.7" text-anchor="middle" font-size="10">4500.00</text>
+<text x="651.2" y="291.0" text-anchor="end" transform="rotate(-45 651.2 291.0)" font-size="10">auditd / active</text>
+<rect class="bar" x="700.2" y="239.7" width="47.1" height="35.3"/>
+<text x="723.8" y="234.7" text-anchor="middle" font-size="10">4496.00</text>
+<text x="723.8" y="291.0" text-anchor="end" transform="rotate(-45 723.8 291.0)" font-size="10">auditd / idle</text>
+<rect class="bar" x="772.7" y="100.4" width="47.1" height="174.6"/>
+<text x="796.2" y="95.4" text-anchor="middle" font-size="10">22244.00</text>
+<text x="796.2" y="291.0" text-anchor="end" transform="rotate(-45 796.2 291.0)" font-size="10">baseline_diff / active</text>
+<rect class="bar" x="845.2" y="100.0" width="47.1" height="175.0"/>
+<text x="868.8" y="95.0" text-anchor="middle" font-size="10">22300.00</text>
+<text x="868.8" y="291.0" text-anchor="end" transform="rotate(-45 868.8 291.0)" font-size="10">baseline_diff / idle</text>
+<rect class="bar" x="917.7" y="191.3" width="47.1" height="83.7"/>
+<text x="941.2" y="186.3" text-anchor="middle" font-size="10">10664.19</text>
+<text x="941.2" y="291.0" text-anchor="end" transform="rotate(-45 941.2 291.0)" font-size="10">inotify / active</text>
+<rect class="bar" x="990.2" y="192.2" width="47.1" height="82.8"/>
+<text x="1013.8" y="187.2" text-anchor="middle" font-size="10">10552.00</text>
+<text x="1013.8" y="291.0" text-anchor="end" transform="rotate(-45 1013.8 291.0)" font-size="10">inotify / idle</text>
+<text x="285.0" y="430" text-anchor="middle" font-size="14" font-weight="bold">Mean read bytes/sample</text>
+<line class="axis" x1="85" x2="85" y1="450" y2="625"/>
+<line class="axis" x1="85" x2="520" y1="625" y2="625"/>
+<rect class="bar" x="104.0" y="625.0" width="70.7" height="0.0"/>
+<text x="139.4" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="139.4" y="641.0" text-anchor="end" transform="rotate(-45 139.4 641.0)" font-size="10">baseline_diff / active</text>
+<rect class="bar" x="212.8" y="625.0" width="70.7" height="0.0"/>
+<text x="248.1" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="248.1" y="641.0" text-anchor="end" transform="rotate(-45 248.1 641.0)" font-size="10">baseline_diff / idle</text>
+<rect class="bar" x="321.5" y="625.0" width="70.7" height="0.0"/>
+<text x="356.9" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="356.9" y="641.0" text-anchor="end" transform="rotate(-45 356.9 641.0)" font-size="10">inotify / active</text>
+<rect class="bar" x="430.3" y="625.0" width="70.7" height="0.0"/>
+<text x="465.6" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="465.6" y="641.0" text-anchor="end" transform="rotate(-45 465.6 641.0)" font-size="10">inotify / idle</text>
+<text x="815.0" y="430" text-anchor="middle" font-size="14" font-weight="bold">Mean write bytes/sample</text>
+<line class="axis" x1="615" x2="615" y1="450" y2="625"/>
+<line class="axis" x1="615" x2="1050" y1="625" y2="625"/>
+<rect class="bar" x="634.0" y="625.0" width="70.7" height="0.0"/>
+<text x="669.4" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="669.4" y="641.0" text-anchor="end" transform="rotate(-45 669.4 641.0)" font-size="10">baseline_diff / active</text>
+<rect class="bar" x="742.8" y="625.0" width="70.7" height="0.0"/>
+<text x="778.1" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="778.1" y="641.0" text-anchor="end" transform="rotate(-45 778.1 641.0)" font-size="10">baseline_diff / idle</text>
+<rect class="bar" x="851.5" y="450.0" width="70.7" height="175.0"/>
+<text x="886.9" y="445.0" text-anchor="middle" font-size="10">1638.40</text>
+<text x="886.9" y="641.0" text-anchor="end" transform="rotate(-45 886.9 641.0)" font-size="10">inotify / active</text>
+<rect class="bar" x="960.3" y="625.0" width="70.7" height="0.0"/>
+<text x="995.6" y="620.0" text-anchor="middle" font-size="10">0.00</text>
+<text x="995.6" y="641.0" text-anchor="end" transform="rotate(-45 995.6 641.0)" font-size="10">inotify / idle</text>
+</svg>

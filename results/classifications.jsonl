@@ -1,0 +1,2 @@
+{"alert_id": "alert-f9d0627a-c1a8-4115-9fa7-64ead6792ac9", "classification": "false_positive", "reason": "Experiment B iteration 0: no implant planted; nearest activity=edit_bashrc", "record_type": "alert_classification"}
+{"alert_id": "alert-17df2f84-5cde-45b5-85b3-8f0849bf06cc", "classification": "false_positive", "reason": "Experiment B iteration 0: no implant planted; nearest activity=outside_any_activity_window", "record_type": "alert_classification"}

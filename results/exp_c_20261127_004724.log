@@ -1,0 +1,7 @@
+[exp] [C] baseline_diff idle: sampling pid(s)=[19529] for 20s
+[exp] [C] baseline_diff active: sampling pid(s)=[19553] for 20s
+[exp] [C] inotify idle: sampling pid(s)=[19972, 19973] for 20s
+[exp] [C] inotify active: sampling pid(s)=[19976, 19977] for 20s
+[exp] [C] auditd idle: sampling pid(s)=[20386, 20388] for 20s
+[exp] [C] auditd active: sampling pid(s)=[20424, 20426] for 20s
+[exp] done. resources: results/resources.csv

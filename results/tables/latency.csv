@@ -1,0 +1,6 @@
+experiment_id,detector,technique,matched_alerts,valid_latency_count,invalid_latency_count,mean_latency_ms,median_latency_ms,min_latency_ms,max_latency_ms,data_status
+A,auditd,ld_preload,2,2,0,502.885885,502.885885,342.8411,662.93067,ok
+A,baseline_diff,ld_preload,2,2,0,16946.3972305,16946.3972305,4441.433658,29451.360803,ok
+A,baseline_diff,shell_rc,2,2,0,16930.256043499998,16930.256043499998,4442.476232,29418.035855,ok
+A,inotify,ld_preload,2,2,0,198.279843,198.279843,37.475103,359.084583,ok
+A,inotify,shell_rc,4,4,0,18.804253250000002,18.71053,17.825463,19.97049,ok

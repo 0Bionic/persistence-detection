@@ -1,0 +1,7 @@
+experiment_id,detector,phase,sample_count,process_count,valid_cpu_samples,mean_cpu_percent,max_cpu_percent,valid_memory_samples,mean_resident_memory_kb,max_resident_memory_kb,valid_read_delta_samples,mean_read_bytes_delta,total_read_bytes_delta,valid_write_delta_samples,mean_write_bytes_delta,total_write_bytes_delta,missing_measurement_fields,data_status
+C,auditd,active,42,2,40,0.0,0.0,42,4500.0,6728.0,0,,,0,,,86,partial
+C,auditd,idle,42,2,40,0.0,0.0,42,4496.0,6696.0,0,,,0,,,86,partial
+C,baseline_diff,active,21,1,20,0.0,0.0,21,22244.0,22244.0,20,0.0,0,20,0.0,0,3,partial
+C,baseline_diff,idle,21,1,20,0.0,0.0,21,22300.0,22300.0,20,0.0,0,20,0.0,0,3,partial
+C,inotify,active,42,2,40,0.1748770211725268,1.9987508267020215,42,10664.190476190477,19364.0,40,0.0,0,40,1638.4,65536,6,partial
+C,inotify,idle,42,2,40,0.12531065761774343,1.0150301121804843,42,10552.0,19120.0,40,0.0,0,40,0.0,0,6,partial

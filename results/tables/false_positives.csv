@@ -1,0 +1,7 @@
+experiment_id,detector,technique,alert_count,classified_alert_count,unclassified_alert_count,false_positive_count,data_status
+A,auditd,ld_preload,2,0,2,,partial
+A,baseline_diff,ld_preload,2,0,2,,partial
+A,baseline_diff,shell_rc,2,0,2,,partial
+A,inotify,ld_preload,2,0,2,,partial
+A,inotify,shell_rc,4,0,4,,partial
+B,inotify,shell_rc,2,2,0,2,ok
